@@ -16,101 +16,13 @@ if(options.indexOf("prototype") >= 0) {
     }
 }
 
-/*
- * checkType() : Test the type of the value. If succeds return true, 
- * if fails, throw an Error
- */
-function checkType(value,type, i){
-    // perform the appropiate test to the passed 
-    // value according to the provided type
-    switch(type){
-        case Boolean : 
-            if(typeof value === 'boolean') return true;
-            break;
-        case String : 
-            if(typeof value === 'string') return true;
-            break;
-        case Number : 
-            if(typeof value === 'number') return true;
-            break;
-        case Array :
-            if(Array.isArray(value)) return true
-            break;
-        case Array :
-            if(typeof value === 'object') return true
-            break;
-        case Function :
-            if(typeof value === 'function') return true
-            break;
-        case Object :
-            if(typeof value === 'object') return true
-        default :
-            throw new Error(`TypeError : Unknown type provided in argument ${i+1}`);
-    }
-    // test didn't succeed , throw error
-    throw new Error(`TypeError : Expecting a ${type.name} in argument ${i+1}`);
-  }
-  
-  
-  /*
-   * typedFunction() : Constructor that returns a wrapper
-   * to handle each function call, performing automatic 
-   * arguments type checking
-   */
-  function tFunc( parameterTypes, func ){
-    // types definitions and function parameters 
-    // count must match
-    if(parameterTypes.length !== func.length) throw new Error(`Function has ${func.length} arguments, but type definition has ${parameterTypes.length}`);
-    // return the wrapper...
-    return function(...args){
-      // provided arguments count must match types
-      // definitions count
-      if(parameterTypes.length !== args.length) throw new Error(`Function expects ${func.length} arguments, instead ${args.length} found.`);
-      // iterate each argument value, and perform a
-      // type check against it, using the type definitions
-      // provided in the construction stage
-      for(let i=0; i<args.length;i++) checkType( args[i], parameterTypes[i] , i)
-      // if no error has been thrown, type check succeed
-      // execute function!
-      return func(...args);
-    }
-  }
-
-var myFunc = tFunc( [ Number, Number ],  (a,b)=>{
-    return a+b;
-});
-
 class mystils {
     constructor() {
         window.mt == "myst"
         //#region Arrays
         if(prtOpt == undefined || prtOpt.indexOf("array") >= 0) {
-            Array.prototype.unique = function() { 
-                return Array.from(new Set(this)) 
-            }
-            Array.prototype.forAll = tFunc([Function], function(toDo) {
-                for(let i = 0; i < this.length; i++) {
-                    toDo(this[i], i)
-                }
-            })
-            Array.prototype.shuffle = function() {
-                return this.sort(() => {Math.random() - 0.5});
-            };
+            Object.prototype.unique = function() { return Array.from(new Set(this)) }
         }
-        //#endregion
-        //#region Numbers
-        Number.prototype.isPrime = function() {
-            var n = '1'.repeat(this);
-            return !n.match(/^1?$|^(11+?)\1+$/gi);
-        };
-        Number.prototype.getPrc = function() { //get precision
-            if (!isFinite(this)) return 0;
-            var e = 1, p = 0;
-            while (Math.round(this * e) / e !== this) { e *= 10; p++; }
-            return p;
-        }
-        //#endregion
-
         if(options.indexOf("css") >= 0) {
             let standardCss = `
                 * {
@@ -133,13 +45,12 @@ class mystils {
             stdSS.textContent = standardCss
             document.head.appendChild(stdSS)
         }
+        //#endregion
     }
-    addNumbers = tFunc([Array], (numbers) => {
-        console.log(numbers)
-        var sum = 0;
-        numbers.forEach(e => {if(typeof e == "number"||typeof e == "boolean") sum += e});
-        return sum
-    })
+    addNumbers(numbers) {
+        var sum;
+        numbers.array.forEach(e => {if(typeof e == Number||typeof e == Boolean) sum += e});
+    }
     isNumeric(a) {
         if(a.constructor.name == "Array") {
             if(a.filter(e => isNaN(+e)).length > 0) return false
@@ -148,7 +59,7 @@ class mystils {
         if(isNaN(+a)) return false
         return true
     }
-    rand = tFunc([Number, Number, Number], (min, max, precision) => {
+    rand(min, max, precision) {
         if(max == undefined) {
             if(min == undefined) return Math.round(Math.random())
             if(min < -1) return -Math.round(Math.random() * (Math.abs(min) - 1) + 1);
@@ -159,20 +70,21 @@ class mystils {
             if( min == 1 ) return Math.round(Math.random());
             if(min > 1) return Math.round(Math.random() * (min - 1) + 1);
         }
+        console.log("s1")
         precision ??= 1
         let prcFac = "1";
         for(let i = 1; i < precision; i++) {
             prcFac += "0"
         }
         return Math.floor(Math.random() * (max * prcFac - min * prcFac) + min * prcFac) / (min*prcFac)
-    })
-    getPrc = tFunc([Number], (number) => { //get precision
+    }
+    getPrc(number) { //get precision
         if (!isFinite(number)) return 0;
         var e = 1, p = 0;
         while (Math.round(number * e) / e !== number) { e *= 10; p++; }
         return p;
-    })
-    addCss = tFunc([String, Object], (css, attributes) => { //attributes {data-opt: "cool"}
+    }
+    addCss(css, attributes) { //attributes {data-opt: "cool"}
         let sS = document.createElement("style")
         if(attributes != undefined && typeof attributes == "object") {
             for(let i = 0; i < Object.keys(attributes).length; i++) {
@@ -182,8 +94,8 @@ class mystils {
         sS.type = "text/css"
         sS.textContent = css
         document.head.appendChild(sS)
-    })
-    addJs = tFunc([String, Object], (js, attributes) => {
+    }
+    addJs(js, attributes) {
         let jSS = document.createElement("script")
         if(attributes != undefined && typeof attributes == "object") {
             for(let i = 0; i < Object.keys(attributes).length; i++) {
@@ -192,48 +104,7 @@ class mystils {
         }
         jSS.textContent = js
         document.head.appendChild(jSS)
-    })
-    numBtwn = tFunc([Number, Number, Boolean], (num1, num2, floor) => {
-        if(floor == 1) {
-            return Math.floor((num1+num2)/2)
-        } else {
-            return Math.round((num1+num2)/2)
-        }
-    })
-    binSearch = tFunc([Array, Number], (arr, toSearch) => {
-        arr = arr.sort((a, b) => a - b)
-        let index = Math.floor(arr.length/2)
-        let max = arr.length
-        let min = 0;
-        let resPos;//result position
-        let pass = 0;
-        while(resPos == undefined) {
-            if(pass > arr.length) return undefined
-            pass++
-            if(arr[index] == toSearch) {
-                resPos = index
-            } else if(arr[index] > toSearch) {
-                max = index
-                index = Math.floor((max+min)/2)
-            } else if(arr[index] < toSearch) {
-                min = index
-                index = Math.round((max+min)/2)
-            } else {
-                return undefined
-            }
-        }
-        return resPos
-    })
-    unique = tFunc([Array], (arr) => {
-        return Array.from(new Set(arr)) 
-    })
-    shuffle = tFunc([Array], (arr) => {
-        return arr.sort(() => {Math.random() - 0.5});
-    })
-    isPrime = tFunc([Number], (number) => {
-        var n = '1'.repeat(number);
-        return !n.match(/^1?$|^(11+?)\1+$/gi);
-    })
+    }
 }
 
 const mt = new mystils()
