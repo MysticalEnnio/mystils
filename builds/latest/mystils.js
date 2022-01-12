@@ -8,7 +8,7 @@ Copyright © 2022 Ennio Marke
 |_____||_____|  |______|   \______.'  |_____| 
 *************************************************/
 
-const options = document.currentScript.dataset.opt.split(" ").map(e => e.toLowerCase())
+const options = document.currentScript.hasAttribute("data-opt") ? document.currentScript.dataset.opt.split(" ").map(e => e.toLowerCase()): []
 const umlautMap = {
     '\u00dc': 'UE',
     '\u00c4': 'AE',
