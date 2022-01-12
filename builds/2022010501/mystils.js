@@ -32,6 +32,10 @@ class mystils {
                     font-family: 'Helvetica', cursive;
                 }
           
+                html {
+                    scroll-behavior: smooth;
+                }
+
                 body {
                     overflow: hidden;
                 }
