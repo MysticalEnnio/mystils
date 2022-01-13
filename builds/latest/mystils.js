@@ -110,7 +110,6 @@ class mystils {
 
         //#region Objects
         if(prtOpt == undefined || prtOpt.indexOf("object") >= 0) {
-            console.log("lol")
             Object.prototype.keys = function() {
                 Object.keys(this)
             }
