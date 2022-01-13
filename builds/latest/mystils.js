@@ -111,11 +111,10 @@ class mystils {
         //#region Objects
         if(prtOpt == undefined || prtOpt.indexOf("object") >= 0) {
             Object.prototype.keys = function() {
-                console.log(this)
-                Object.keys(this)
+                return Object.keys(this)
             }
             Object.prototype.vals = function() {
-                this[Object.keys(this)]
+                return this[Object.keys(this)]
             }
         }
         //#endregion
