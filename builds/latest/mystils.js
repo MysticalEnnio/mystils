@@ -110,35 +110,43 @@ class mystils {
 
         //#region Objects
         if(prtOpt == undefined || prtOpt.indexOf("object") >= 0) {
-            Object.prototype.keys = Object.keys(this)
-            Object.prototype.vals = this[Object.keys(this)]
+            Object.prototype.keys = function() {
+                Object.keys(this)
+            }
+            Object.prototype.vals = function() {
+                this[Object.keys(this)]
+            }
         }
         //#endregion
 
         //#region Numbers
-        Number.prototype.isPrime = function() {
-            var n = '1'.repeat(this);
-            return !n.match(/^1?$|^(11+?)\1+$/gi);
-        };
-        Number.prototype.getPrc = function() { //get precision
-            if (!isFinite(this)) return 0;
-            var e = 1, p = 0;
-            while (Math.round(this * e) / e !== this) { e *= 10; p++; }
-            return p;
+        if(prtOpt == undefined || prtOpt.indexOf("number") >= 0) {
+            Number.prototype.isPrime = function() {
+                var n = '1'.repeat(this);
+                return !n.match(/^1?$|^(11+?)\1+$/gi);
+            };
+            Number.prototype.getPrc = function() { //get precision
+                if (!isFinite(this)) return 0;
+                var e = 1, p = 0;
+                while (Math.round(this * e) / e !== this) { e *= 10; p++; }
+                return p;
+            }
         }
         //#endregion
 
         //#region String
-        String.prototype.replaceUmlaute = function() {
-            return this
-              .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
-                const big = umlautMap[a.slice(0, 1)];
-                return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
-              })
-              .replace(new RegExp('['+Object.keys(umlautMap).join('|')+']',"g"),
-                (a) => umlautMap[a]
-              );
-          }
+        if(prtOpt == undefined || prtOpt.indexOf("string") >= 0) {
+            String.prototype.replaceUmlaute = function() {
+                return this
+                .replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
+                    const big = umlautMap[a.slice(0, 1)];
+                    return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+                })
+                .replace(new RegExp('['+Object.keys(umlautMap).join('|')+']',"g"),
+                    (a) => umlautMap[a]
+                );
+            }
+        }
         //#endregion
 
         if(options.indexOf("css") >= 0) {
