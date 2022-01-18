@@ -219,7 +219,6 @@ class mystils {
     }
   }
   addNumbers = tFunc([Array], (numbers) => {
-    console.log(numbers);
     var sum = 0;
     numbers.forEach((e) => {
       if (typeof e == "number" || typeof e == "boolean") sum += e;
