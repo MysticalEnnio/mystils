@@ -168,7 +168,7 @@ class mystils {
     if (options.indexOf("css") >= 0) {
       let standardCss = `
                 :root {
-                    --res-size: calc(100vmin/100px)
+                    --res-size: calc(100vmin / 1rem)
                 }
 
                 * {
