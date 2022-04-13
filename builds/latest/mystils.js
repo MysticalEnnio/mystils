@@ -249,13 +249,11 @@ class mystils {
       if (min > 1) return Math.round(Math.random() * (min - 1) + 1);
     }
     precision ??= 1;
-    let prcFac = "1";
-    for (let i = 1; i < precision; i++) {
-      prcFac += "0";
-    }
+    precision--;
+    const fractionMultiplier = Math.pow(10, precision);
     return (
-      Math.floor(Math.random() * (max * prcFac - min * prcFac) + min * prcFac) /
-      (min * prcFac)
+      Math.round((Math.random() * (max - min) + min) * fractionMultiplier) /
+      fractionMultiplier
     );
   });
   getPrc = tFunc([Number], (number) => {
